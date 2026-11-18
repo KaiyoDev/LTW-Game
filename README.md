@@ -114,8 +114,9 @@ php -S localhost:8000
 
 ## Trạng thái hiện tại
 
-- Đã xong: kịch bản game 51 trang, thiết kế cơ sở dữ liệu ERD 11 bảng và 16 khóa ngoại, file SQL
-- Đã xong: demo Chương 1 chơi được, dùng để mô phỏng trước trong buổi báo cáo tiến độ lần 1
-- Đang làm: tài liệu và code nền tảng (đăng ký, đăng nhập, lưu game, bảng xếp hạng)
+- Đã xong: kịch bản game 51 trang, thiết kế cơ sở dữ liệu ERD 11 bảng và 16 khóa ngoại, file SQL (`schema.sql` và `seed.sql` đủ 8 câu đố + 8 manh mối Chương 1)
+- Đã xong: backend đủ 11/11 endpoint PHP + MySQL (`register`, `login`, `logout`, `chapters`, `chapter`, `inventory`, `pickup`, `solve`, `save`, `load`, `leaderboard`)
+- Đã xong: giao diện responsive 4 trang, `api.js` session cookie, `auth.js`, `leaderboard.js` live 10s, `puzzle.js` tích hợp `game.html`, sơ đồ kiến trúc và ảnh chụp giao diện (`docs/screenshots/`)
+- Đang làm: đồng bộ đồ họa phòng B/C, tên 6 chương và nối hoàn chỉnh túi đồ/lưu game trong `game.html`
 - Chưa làm: code đầy đủ cả 6 chương của game, giao diện đầy đủ 20 phòng, toàn bộ 46 câu đố
 - Chi tiết tiến độ xem [docs/06-ke-hoach.md](docs/06-ke-hoach.md)
