@@ -132,3 +132,34 @@ INSERT INTO MANH_MOI (ma_manh_moi, ma_cau_do, noi_dung) VALUES
 (4, 15, 'Ma ket co 4 so, goi y nam trong ngan keo quay thuoc.'),
 (5, 16, 'Lo thuoc nhe hon chuan 47 gram, do la bang chung Long rut thuoc.'),
 (6, 18, 'Gac luu tru la noi chu Bao tron, leo len tu xuong in.');
+
+-- 9. Nghi bo sung dap an va manh moi cho 4 cau do Chuong 1 con thieu (1.3, 1.5, 1.6, 1.7) va manh moi Chuong 1.
+UPDATE CAU_DO SET
+  mo_ta = 'Buc anh gia dinh cu treo o hanh lang, mat sau co chu viet tay, phai soi den moi doc duoc.',
+  dap_an = 'soi den'
+WHERE ma_cau_do = 3;
+
+UPDATE CAU_DO SET
+  mo_ta = 'Cuon bang cat-xet ghi lai tieng mua tren mai ton va tieng chuong chua luc nua dem.',
+  dap_an = 'tieng mua va tieng chuong'
+WHERE ma_cau_do = 5;
+
+UPDATE CAU_DO SET
+  mo_ta = 'Trong tu ao go co to giay cu gap theo nep, mo theo dung nep de doc dieu chu Bao ghi.',
+  dap_an = 'gap theo nep cu'
+WHERE ma_cau_do = 6;
+
+UPDATE CAU_DO SET
+  mo_ta = 'Dung guong cam tay o san thuong, hung anh nang chieu sang khe toi duoi bon nuoc.',
+  dap_an = 'hung nang vao khe toi',
+  ma_vat_pham_can = 10
+WHERE ma_cau_do = 7;
+
+-- Bo sung manh moi cho cac cau do Chuong 1 con thieu (cau 2, 3, 5, 6, 7, 8).
+INSERT INTO MANH_MOI (ma_cau_do, noi_dung) VALUES
+(2, 'Hop thiec nam sau duoi gam giuong, can thu gi dai va cong nhu chiec moc ao de keo ra.'),
+(3, 'Mat sau buc anh gia dinh co chu viet tay, phai soi den moi doc ro.'),
+(5, 'Nghe ky cuon bang de phan biet tieng mua va tieng chuong chua.'),
+(6, 'To giay giau trong tu ao go duoc gap lai theo nep cu, mo dung nep se thay noi dung.'),
+(7, 'Dung guong cam tay hung anh nang mat troi de chieu sang khe toi duoi bon nuoc.'),
+(8, 'Khi nguoi la ngoai cua hoi, hay noi doi nguoi la qua de lay trang so so 1.');
