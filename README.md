@@ -82,8 +82,9 @@ LTW-Game/
 │   └── js/
 │       ├── api.js                  # Lớp gọi API (session cookie, xử lý 401/lỗi mạng)
 │       ├── auth.js                 # Validate form, đăng nhập/đăng ký/đăng xuất, nav
+│       ├── game.js                 # Logic Chương 1: 3 phòng, hotspot, pickup, save/load, solve
 │       ├── leaderboard.js          # BXH theo chương, auto-refresh 10s
-│       └── puzzle.js               # Nạp manh mối MANH_MOI và giải đố qua action=solve
+│       └── puzzle.js               # Nạp manh mối MANH_MOI và hỗ trợ giải đố qua action=solve
 └── docs/
     ├── 01-yeu-cau.md               # Yêu cầu chức năng, phi chức năng, use case, trạng thái
     ├── 02-kien-truc.md             # Sơ đồ kiến trúc và sequence diagrams
@@ -126,7 +127,7 @@ LTW-Game/
 ### Kiểm tra cú pháp nhanh
 ```bash
 php -l backend/api/index.php backend/config.php
-node --check frontend/js/api.js frontend/js/auth.js frontend/js/leaderboard.js frontend/js/puzzle.js
+node --check frontend/js/api.js frontend/js/auth.js frontend/js/game.js frontend/js/leaderboard.js frontend/js/puzzle.js
 ```
 
 ---
@@ -166,9 +167,9 @@ Xem bộ ảnh thực tế 4 trang chính trong [docs/screenshots/README.md](doc
 - **Đã xong:**
   - Kịch bản game 51 trang, thiết kế CSDL ERD 11 bảng / 16 khóa ngoại (`schema.sql`), dữ liệu Chương 1 đủ 8 câu đố và 8 manh mối (`seed.sql`).
   - Backend PHP + MySQL hoàn thiện đủ 11/11 endpoint.
-  - Giao diện responsive 4 trang, `api.js` (session cookie + xử lý `401`), `auth.js`, `leaderboard.js` (live 10s), `puzzle.js` tích hợp `game.html`, sơ đồ kiến trúc và ảnh chụp giao diện.
+  - Giao diện responsive 4 trang, `api.js` (session cookie, xử lý `401`, `pickupItem`), `auth.js`, `leaderboard.js` (live 10s), `puzzle.js`, `game.js` (3 phòng Chương 1, nối `solve`/`pickup`/`save`/`load`/`inventory`), sơ đồ kiến trúc và ảnh chụp giao diện.
 - **Đang làm:**
-  - Đồng bộ lại đồ họa phòng B/C, thống nhất tên 6 chương giữa giao diện và `seed.sql`, nối hoàn chỉnh `save`/`load`/`pickup` trong `game.html`.
+  - Đồng bộ lại đồ họa phòng B/C và thống nhất tên 6 chương giữa giao diện và `seed.sql`.
 - **Chưa làm:**
   - Nội dung và màn chơi đầy đủ cho Chương 2 đến Chương 6 (17 phòng và 38 câu đố còn lại) cùng kiểm thử tổng thể cả 6 chương.
 

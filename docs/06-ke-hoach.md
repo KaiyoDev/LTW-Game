@@ -8,9 +8,9 @@
 | Thiết kế cơ sở dữ liệu ERD | Đã xong | 11 bảng, 16 khóa ngoại, file SQL, DBML, JSON, Excel, PDF |
 | Báo cáo tiến độ lần 1 | Đã xong | File Word và bộ slide 11 trang, phân công từng thành viên |
 | Tài liệu dự án | Đã xong | README và docs 01 tới 06 trong thư mục này |
-| Demo Chương 1 | Đang làm | Giao diện 4 trang đã xong; `seed.sql` đủ 8 câu đố và 8 manh mối Chương 1; `puzzle.js` đã tích hợp vào `game.html`; còn đồng bộ ảnh phòng B/C và nối đầy đủ túi đồ/lưu game |
+| Demo Chương 1 | Đang hoàn thiện | Giao diện 4 trang đã xong; `seed.sql` đủ 8 câu đố, 8 manh mối và `DO_VAT` Chương 1; `game.js` đã tách riêng đi đủ 3 phòng, nối `solve`/`pickup`/`save`/`load`/`inventory`; còn đồng bộ ảnh phòng B/C |
 | API nền tảng | Đã xong | Đủ 11/11 action (`register`, `login`, `logout`, `chapters`, `chapter`, `inventory`, `pickup`, `solve`, `save`, `load`, `leaderboard`) trong `backend/api/index.php`, đã test curl trên DB mới |
-| Front-end nền tảng | Đang hoàn thiện | HTML/CSS responsive 4 trang; `config.js` trỏ `http://localhost:8000/backend/api`; `api.js` dùng session cookie (`credentials: "include"`); `auth.js`, `leaderboard.js` live 10s và `puzzle.js` đã xong; còn nối `save`/`load`/`pickup` trong `game.html` |
+| Front-end nền tảng | Đã xong | HTML/CSS responsive 4 trang; `config.js` trỏ `http://localhost:8000/backend/api`; `api.js` dùng session cookie (`credentials: "include"`); `auth.js`, `leaderboard.js` live 10s, `puzzle.js` và `game.js` đã hoàn thiện |
 | Tài liệu kiến trúc & ảnh chụp | Đã xong | Cập nhật sơ đồ kiến trúc `docs/02-kien-truc.md` và bộ ảnh 4 trang trong `docs/screenshots/` |
 | Code đầy đủ 6 chương | Chưa làm | Mới có chương 1, còn chương 2 tới chương 6 |
 | Giao diện đủ 20 phòng | Chưa làm | Mới có 3 phòng chương 1, còn 17 phòng |
@@ -32,8 +32,8 @@
 ## 6.3. Bước tiếp theo
 
 - Bước 1 (Đã xong): hoàn thành API nền tảng, đủ 11 action trong [04-api.md](04-api.md), test bằng curl trước khi nối front-end
-- Bước 2 (Đang hoàn thiện): đã xong `api.js` session cookie, `auth.js`, `leaderboard.js` live 10s, `puzzle.js`; còn nối hoàn chỉnh `save`/`load`/`pickup` trong `game.html` với API thật
-- Bước 3: đồng bộ lại đồ họa phòng B/C, tên 6 chương và nối hoàn chỉnh túi đồ/lưu game để demo Chương 1 chơi được trọn vẹn từ đầu tới cuối, tìm được trang sổ số 1, mở khóa chương 2
+- Bước 2 (Đã xong): hoàn thành front-end nền tảng (`api.js` session cookie, `auth.js`, `leaderboard.js` live 10s, `puzzle.js`, `game.js` nối `save`/`load`/`pickup`/`inventory`/`solve`)
+- Bước 3: đồng bộ lại đồ họa phòng B/C, tên 6 chương và kiểm thử trọn vẹn demo Chương 1 từ đầu tới cuối, tìm được trang sổ số 1, mở khóa chương 2
 - Bước 4: kiểm chứng dữ liệu lưu thật trong MySQL, lưu game rồi tải lại đúng phòng, đúng đồ, đúng câu đã giải
 - Bước 5: làm tiếp chương 2 và chương 3, gồm phòng, đồ vật, câu đố, dữ liệu mẫu
 - Bước 6: làm tiếp chương 4, chương 5, chương 6, gồm két mã 0312 ở chương 5 và bản in thử dính mực tím ở chương 6
