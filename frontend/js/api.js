@@ -45,7 +45,7 @@
     var method = (options.method || "GET").toUpperCase();
     var url = buildUrl(action, options.params);
     var headers = { "Accept": "application/json" };
-    var fetchOptions = { method: method, headers: headers };
+    var fetchOptions = { method: method, headers: headers, credentials: "include" };
     if (method !== "GET") {
       headers["Content-Type"] = "application/json";
       if (options.body !== undefined) fetchOptions.body = JSON.stringify(options.body);
@@ -102,8 +102,30 @@
   function loadGame(maChuong) {
     return api("load", { params: { ma_chuong: maChuong } });
   }
+  // Giữ nguyên envelope để nơi gọi đọc response.data. Không coi lỗi API là túi trống.
+  function inventoryResponse(response) {
+    if (!response || (response.ok !== true && response.success !== true) ||
+        response.ok === false || response.success === false) {
+      throw new Error((response && (response.error || response.message)) || "Phản hồi vật phẩm không hợp lệ.");
+    }
+    return response;
+  }
   function getInventory() {
-    return api("inventory", {});
+    return api("inventory", { auth: false }).then(inventoryResponse).then(function (response) {
+      if (!Array.isArray(response.data)) throw new Error("Dữ liệu túi đồ không hợp lệ.");
+      return response;
+    });
+  }
+  // maVatPham lấy từ dữ liệu server, không dùng tên/mã nội bộ của bản demo.
+  function pickupItem(maVatPham) {
+    if (!Number.isSafeInteger(maVatPham) || maVatPham <= 0) {
+      return Promise.reject(new Error("Mã vật phẩm không hợp lệ."));
+    }
+    return api("pickup", {
+      method: "POST",
+      auth: false,
+      body: { ma_vat_pham: maVatPham }
+    }).then(inventoryResponse);
   }
   function getLeaderboard(maChuong) {
     return api("leaderboard", { auth: false, params: { ma_chuong: maChuong } });
@@ -127,6 +149,7 @@
     saveGame: saveGame,
     loadGame: loadGame,
     getInventory: getInventory,
+    pickupItem: pickupItem,
     getLeaderboard: getLeaderboard,
     getChapters: getChapters
   };

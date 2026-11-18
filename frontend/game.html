@@ -1535,17 +1535,18 @@
       function qdRefreshServerInv() {
         var box = $("serverInv");
         if (!box) return;
-        if (!window.QD || !QD.isLoggedIn()) {
-          box.textContent = "Chưa đăng nhập: túi đồ trên máy chủ chưa đồng bộ.";
+        if (!window.QD) {
+          box.textContent = "Không tải được túi đồ trên máy chủ.";
           return;
         }
+        box.textContent = "Đang tải túi đồ trên máy chủ...";
         QD.getInventory().then(function (data) {
-          var items = (data && (data.items || data.vat_pham || data.rows || data.data)) || [];
+          var items = data.data;
           if (!items.length) { box.textContent = "Túi đồ trên máy chủ: trống."; return; }
-          var names = items.map(function (it) { return it.ten_do_vat || it.ten || it.ma_do_vat || "?"; });
-          box.textContent = "Túi đồ trên máy chủ (" + items.length + " món): " + names.join(", ") + ".";
-        }).catch(function () {
-          box.textContent = "Không tải được túi đồ trên máy chủ.";
+          var names = items.map(function (it) { return it.ten_vat_pham + " × " + it.so_luong; });
+          box.textContent = "Túi đồ trên máy chủ (" + items.length + " loại): " + names.join(", ") + ".";
+        }).catch(function (err) {
+          box.textContent = "Không tải được túi đồ trên máy chủ: " + err.message;
         });
       }
       /* Tu dong luu mot lan khi mo cua thang Chuong 1. */
