@@ -92,21 +92,21 @@ INSERT INTO VAT_PHAM (ma_vat_pham, ten_vat_pham, mo_ta, ma_do_vat) VALUES
 -- 6. Bo sung mo ta, dap an va vat pham cho 4 cau do chuong 1 trong schema.sql.
 UPDATE CAU_DO SET
   mo_ta = 'Chot cua gai theo ranh chu L, keo chot men theo ranh moi mo duoc cua.',
-  dap_an = 'keo chot theo ranh chu L'
+  dap_an = 'xuong,trai'
 WHERE ma_cau_do = 1;
 UPDATE CAU_DO SET
   mo_ta = 'Hop thiec nam sau duoi gam giuong, tay khong voi toi.',
-  dap_an = 'moc ao uon cong',
+  dap_an = '9',
   ma_vat_pham_can = 9
 WHERE ma_cau_do = 2;
 UPDATE CAU_DO SET
   mo_ta = 'Chau cay giay xoay duoc theo vet xuoc tren thanh chau.',
-  dap_an = 'xoay chau cay',
+  dap_an = 'nac5,vach2',
   ma_vat_pham_thuong = 1
 WHERE ma_cau_do = 4;
 UPDATE CAU_DO SET
   mo_ta = 'Noi doi nguoi la qua cua phong.',
-  dap_an = 'noi doi nguoi la qua',
+  dap_an = '2',
   ma_vat_pham_thuong = 2
 WHERE ma_cau_do = 8;
 
