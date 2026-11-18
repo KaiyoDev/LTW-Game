@@ -2,12 +2,12 @@
 <html lang="vi">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="color-scheme" content="dark" />
   <title>Bảng xếp hạng, Quạ Đen</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
@@ -16,7 +16,7 @@
       <a class="brand" href="index.html"><span class="crow">&#10022;</span> QUẠ ĐEN <small>Sài Gòn 1998</small></a>
       <a class="navlink" href="index.html">Trang chủ</a>
       <a class="navlink" href="game.html">Chơi game</a>
-      <a class="navlink" href="leaderboard.html">Bảng xếp hạng</a>
+      <a class="navlink active" href="leaderboard.html">Bảng xếp hạng</a>
       <span class="nav-user hidden" id="navUser"></span>
       <a class="navlink hidden" id="navLogout" href="#" onclick="return false;">Đăng xuất</a>
       <a class="navlink" id="navLogin" href="auth.html">Đăng nhập</a>
@@ -28,7 +28,7 @@
     <div class="wrap">
       <h2>Bảng xếp hạng</h2>
       <p class="muted">Tốc độ phá đảo theo từng chương: hoàn thành càng nhanh, xếp hạng càng cao. Mỗi lượt chơi một chương tính là một dòng trên bảng.</p>
-      <p class="muted" id="lbChapterTitle">Chương 1: Căn phòng khóa trái ở hẻm 41</p>
+      <p class="muted" id="lbChapterTitle">Chương 1: Dinh thự bị lãng quên</p>
       <div class="lb-tabs" role="tablist" aria-label="Chọn chương">
         <button class="lb-tab active" type="button" data-chuong="1">Chương 1</button>
         <button class="lb-tab" type="button" data-chuong="2">Chương 2</button>

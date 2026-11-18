@@ -32,6 +32,7 @@ Lưu ý: `backend/db/seed.sql` có 2 người cùng đụng (Đình và Nghi và
 - JS không được đổi cấu trúc DOM của Ân (không xóa thẻ, không đổi class giao diện). Chỉ được đổi nội dung chữ và trạng thái hiển thị.
 - Mọi hàm gọi API đi qua `frontend/js/api.js`, không viết fetch rải rác trong từng file JS.
 - Ai viết JS mới thì đặt tên file theo đúng phần mình làm, không viết chung vào 1 file của người khác.
+- Danh sách `id` khung trò chuyện mới thêm ở `frontend/game.html` cho nhóm JS: `btnChat`, `chatOverlay`, `chatCard`, `chatAvatar`, `chatSpeaker`, `chatRole`, `chatBody`, `chatChoices`, `chatNext`, `chatClose`.
 
 ## 4. Quy ước API
 
