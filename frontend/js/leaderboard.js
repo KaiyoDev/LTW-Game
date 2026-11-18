@@ -6,12 +6,12 @@
 
   var LIVE_INTERVAL_MS = 10000;
   var CHAPTERS = [
-    { ma: 1, ten: "Chương 1: Căn phòng khóa trái ở hẻm 41" },
-    { ma: 2, ten: "Chương 2: Buổi chiếu cuối ở rạp Lệ Thanh" },
-    { ma: 3, ten: "Chương 3: Tiệm radio Chính Phát ở Nhật Tảo" },
-    { ma: 4, ten: "Chương 4: Chuyến xe đò lúc nửa đêm" },
-    { ma: 5, ten: "Chương 5: Nhà thuốc An Bình và lọ thuốc không nhãn" },
-    { ma: 6, ten: "Chương 6: Nhà in Mực Tím trong đêm cuối" }
+    { ma: 1, ten: "Chương 1: Dinh thự bị lãng quên" },
+    { ma: 2, ten: "Chương 2: Thư viện bí mật" },
+    { ma: 3, ten: "Chương 3: Kho báu bị chôn giấu" },
+    { ma: 4, ten: "Chương 4: Chuyến tàu đêm" },
+    { ma: 5, ten: "Chương 5: Cuộn chỉ đỏ" },
+    { ma: 6, ten: "Chương 6: Kho số 9" }
   ];
 
   var currentChapter = 1;
