@@ -124,8 +124,30 @@
     var params = maChuong ? { ma_chuong: maChuong } : undefined;
     return api("load", { params: params });
   }
+    // Giữ nguyên envelope để nơi gọi đọc response.data. Không coi lỗi API là túi trống.
+  function inventoryResponse(response) {
+    if (!response || (response.ok !== true && response.success !== true) ||
+        response.ok === false || response.success === false) {
+      throw new Error((response && (response.error || response.message)) || "Phản hồi vật phẩm không hợp lệ.");
+    }
+    return response;
+  }
   function getInventory() {
-    return api("inventory", {});
+    return api("inventory", { auth: false }).then(inventoryResponse).then(function (response) {
+      if (!Array.isArray(response.data)) throw new Error("Dữ liệu túi đồ không hợp lệ.");
+      return response;
+    });
+  }
+  // maVatPham lấy từ dữ liệu server, không dùng tên/mã nội bộ của bản demo.
+  function pickupItem(maVatPham) {
+    if (!Number.isSafeInteger(maVatPham) || maVatPham <= 0) {
+      return Promise.reject(new Error("Mã vật phẩm không hợp lệ."));
+    }
+    return api("pickup", {
+      method: "POST",
+      auth: false,
+      body: { ma_vat_pham: maVatPham }
+    }).then(inventoryResponse);
   }
   function pickup(maVatPham) {
     return api("pickup", { method: "POST", body: { ma_vat_pham: maVatPham } });
@@ -162,6 +184,7 @@
     loadGame: loadGame,
     getInventory: getInventory,
     pickup: pickup,
+    pickupItem: pickupItem,
     solve: solve,
     getLeaderboard: getLeaderboard,
     getChapters: getChapters,
