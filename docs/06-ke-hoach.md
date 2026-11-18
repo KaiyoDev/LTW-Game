@@ -8,9 +8,9 @@
 | Thiết kế cơ sở dữ liệu ERD | Đã xong | 11 bảng, 16 khóa ngoại, file SQL, DBML, JSON, Excel, PDF |
 | Báo cáo tiến độ lần 1 | Đã xong | File Word và bộ slide 11 trang, phân công từng thành viên |
 | Tài liệu dự án | Đã xong | README và docs 01 tới 06 trong thư mục này |
-| Demo Chương 1 | Đang làm | Bản chơi được, dùng để mô phỏng trước trong buổi báo cáo tiến độ lần 1 |
-| API nền tảng | Đang làm | Đăng ký, đăng nhập, lưu game, tải game, túi đồ, bảng xếp hạng |
-| Front-end nền tảng | Đang làm | Màn hình đăng nhập, đăng ký, danh sách chương, màn chơi chương 1 |
+| Demo Chương 1 | Đang làm | Giao diện 4 trang đã hoàn thiện responsive & đồng bộ chủ đề; còn phần JS logic câu đố & đồ họa phòng B/C đang đồng bộ theo kịch bản Chương 1 |
+| API nền tảng | Đang làm | Đã có 6/11 action (register, login, chapters, save, load, leaderboard); còn thiếu logout, chapter, inventory, pickup, solve |
+| Front-end nền tảng | Đã xong giao diện | Đã xong HTML/CSS responsive (PC, tablet, mobile) cho 4 trang và giữ nguyên id cho nhóm JS; `config.js` đã trỏ về `/backend/api` |
 | Code đầy đủ 6 chương | Chưa làm | Mới có chương 1, còn chương 2 tới chương 6 |
 | Giao diện đủ 20 phòng | Chưa làm | Mới có 3 phòng chương 1, còn 17 phòng |
 | Toàn bộ 46 câu đố | Chưa làm | Mới có 8 câu đố chương 1, còn 38 câu đố |

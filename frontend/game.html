@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="color-scheme" content="dark" />
     <link rel="icon" href="data:," />
-    <title>Quạ Đen: Chương 1, Căn phòng khóa trái ở hẻm 41</title>
+    <title>Quạ Đen: Chương 1, Dinh thự bị lãng quên</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet" />
     <style>
       :root{
         --bg:#e9e4d8; --panel:#f5f1e6; --ink:#2b2620; --ink-soft:#5c554a;
@@ -29,32 +29,50 @@
       body{
         background:var(--bg); color:var(--ink);
         font-family:"Be Vietnam Pro", system-ui, sans-serif;
-        min-height:100vh; display:flex; flex-direction:column; align-items:center;
-        padding:14px 12px 28px;
+        min-height:100vh; min-height:100dvh; display:flex; flex-direction:column; align-items:center;
+        padding:14px 14px calc(28px + env(safe-area-inset-bottom, 0px));
+        -webkit-text-size-adjust:100%;
       }
-      button{ font-family:inherit; cursor:pointer; min-height:2.25rem; }
-      .wrap{ width:100%; max-width:880px; display:flex; flex-direction:column; gap:10px; }
+      button{ font-family:inherit; cursor:pointer; min-height:2.25rem; touch-action:manipulation; }
+      .wrap{ width:100%; max-width:1240px; display:flex; flex-direction:column; gap:12px; }
+
+      /* ---------- responsive game layout (PC 2 cột, Mobile/Tablet 1 cột) ---------- */
+      .game-layout{
+        display:grid;
+        grid-template-columns:minmax(0, 1fr) 340px;
+        gap:14px;
+        align-items:start;
+      }
+      .game-main{ display:flex; flex-direction:column; gap:10px; min-width:0; }
+      .game-side{
+        display:flex; flex-direction:column; gap:10px; min-width:0;
+        position:sticky; top:12px;
+      }
 
       /* ---------- top bar ---------- */
       .topbar{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
       .topbar .room-name{
-        font-family:"Playfair Display", serif; font-size:1.25rem; font-weight:700; letter-spacing:.02em;
-        margin-right:auto; display:flex; align-items:baseline; gap:10px;
+        font-family:"Playfair Display", serif; font-size:clamp(1.08rem, 2.2vw, 1.3rem); font-weight:700; letter-spacing:.02em;
+        margin-right:auto; display:flex; align-items:baseline; gap:10px; flex-wrap:wrap;
       }
       .room-name .chap{ font-family:"Be Vietnam Pro",sans-serif; font-size:.72rem; font-weight:600; color:var(--ink-soft); letter-spacing:.14em; text-transform:uppercase; }
       .tbtn{
         background:var(--panel); color:var(--ink); border:1px solid var(--line);
-        border-radius:8px; padding:6px 12px; font-size:.85rem; font-weight:600;
-        display:inline-flex; align-items:center; gap:6px;
+        border-radius:8px; padding:6px 12px; min-height:38px; font-size:.84rem; font-weight:600;
+        display:inline-flex; align-items:center; justify-content:center; gap:6px; white-space:nowrap;
+        transition:border-color .15s, color .15s, filter .15s;
       }
       .tbtn:hover{ border-color:var(--accent); color:var(--accent); }
-      .tbtn svg{ width:16px; height:16px; }
+      .tbtn svg{ width:16px; height:16px; flex-shrink:0; }
 
       /* ---------- scene ---------- */
       .scene-shell{
         position:relative; border-radius:10px; overflow:hidden;
         border:1px solid var(--line); box-shadow:var(--shadow);
-        background:#4d5a54; aspect-ratio:4/3; width:100%;
+        background:#4d5a54; aspect-ratio:4/3;
+        width:100%;
+        max-width:min(100%, calc((100dvh - 140px) * 4 / 3));
+        margin:0 auto;
         user-select:none; -webkit-user-select:none; touch-action:manipulation;
       }
       .scene{ position:absolute; inset:0; display:none; }
@@ -238,11 +256,34 @@
       .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
 
       .footer-note{ font-size:.78rem; color:var(--ink-soft); text-align:center; margin-top:2px; line-height:1.6; }
-      @media (max-width:560px){
-        .topbar .room-name{ font-size:1.05rem; }
-        .slot{ width:54px; height:54px; min-height:54px; }
-        .dialogue{ font-size:.94rem; min-height:58px; }
-        .nav-arrow{ width:38px; height:56px; }
+      @media (max-width:820px){
+        .wrap{ max-width:820px; }
+        .game-layout{ grid-template-columns:1fr; }
+        .game-side{ position:static; }
+        .scene-shell{ max-width:min(100%, calc(50dvh * 4 / 3)); }
+      }
+      @media (hover:none){
+        .kbd-hint{ display:none; }
+        .hotspot:not(.taken){
+          box-shadow:inset 0 0 0 1.5px rgba(255,238,190,.22);
+        }
+      }
+      @media (max-width:600px){
+        body{ padding:10px 10px calc(20px + env(safe-area-inset-bottom, 0px)); }
+        .topbar{ gap:6px; }
+        .topbar .room-name{ width:100%; margin-right:0; font-size:1.08rem; }
+        .tbtn{ padding:6px 10px; font-size:.8rem; min-height:36px; flex:1 1 auto; }
+        .game-user{ width:100%; text-align:left; }
+        .slot{ width:56px; height:56px; min-height:56px; }
+        .dialogue{ font-size:.94rem; min-height:58px; padding:10px 12px; }
+        .controls-hint{ font-size:.76rem; padding:7px 10px; }
+        .nav-arrow{ width:40px; height:58px; font-size:1.35rem; }
+        .nav-arrow.left{ left:4px; } .nav-arrow.right{ right:4px; }
+        .card{ padding:18px 16px; }
+        .pad{ grid-template-columns:repeat(3, minmax(52px, 64px)); gap:6px; }
+        .pad button{ height:48px; }
+        .symbtn{ width:62px; height:62px; min-height:62px; }
+        .symbtn svg{ width:36px; height:36px; }
       }
       @media (prefers-reduced-motion: reduce){
         .shake{ animation:none; }
@@ -251,32 +292,162 @@
     </style>
   
     <style>
-      /* Ep buoc giao dien toi cho game Qua Den, vang dong #d4a017. */
+      /* Giao dien Rusty Lake Noir + Liquid Glass toi cho game Qua Den. */
       :root{
-        --bg:#0f0e0c; --panel:#1d1a15; --ink:#ece5d3; --ink-soft:#b3a98f;
-        --line:#3a332a; --accent:#d4a017; --accent-2:#7fb3a5;
-        --slot:#26221a; --slot-line:#57503e; --bar:#1d1a15;
-        --shadow:0 10px 30px rgba(0,0,0,.5);
+        --bg:#070809; --panel:rgba(14,16,17,.74); --ink:#e2ddd0; --ink-soft:#8f8a7e;
+        --line:rgba(210,198,170,.13); --accent:#b89146; --accent-2:#5d8277; --blood:#8c2623;
+        --slot:rgba(226,221,208,.04); --slot-line:rgba(210,198,170,.18); --bar:rgba(14,16,17,.74);
+        --shadow:inset 0 1px 0 rgba(242,234,214,.09), 0 16px 42px rgba(0,0,0,.68);
+        --font-display:"Newsreader", Georgia, "Times New Roman", serif;
+        --font-apple:-apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Segoe UI", system-ui, sans-serif;
       }
-      .tbtn{ text-decoration:none; }
-      .tbtn.gold{ background:var(--accent); border-color:var(--accent); color:#171207; }
-      .tbtn.gold:hover{ color:#171207; filter:brightness(1.1); }
-      .game-user{ font-size:.8rem; font-weight:600; color:var(--gold, #d4a017); }
-      .player .held-item{ border-color:#d4a017; }
+      body{
+        font-family:var(--font-apple);
+        font-feature-settings:"cv02","cv03","cv04","cv11";
+        font-variant-numeric:tabular-nums;
+        letter-spacing:-.005em;
+        -webkit-font-smoothing:antialiased;
+        -moz-osx-font-smoothing:grayscale;
+        text-rendering:optimizeLegibility;
+        background:
+          radial-gradient(ellipse 65% 45% at 18% 8%, rgba(140,38,35,.17), transparent 62%),
+          radial-gradient(ellipse 60% 50% at 85% 22%, rgba(28,48,42,.30), transparent 65%),
+          radial-gradient(ellipse 75% 45% at 50% 96%, rgba(115,87,35,.12), transparent 60%),
+          var(--bg);
+        background-attachment:fixed;
+      }
+      body::after{
+        content:""; position:fixed; inset:0; pointer-events:none; z-index:40;
+        box-shadow:inset 0 0 130px rgba(0,0,0,.78);
+      }
+      .topbar .room-name, .card h2, .dialogue .who, .stepper .val,
+      .safe-display, .radio-line, .end-stats .st b{
+        font-family:var(--font-display);
+        font-weight:500;
+        letter-spacing:-.015em;
+      }
+      .dialogue{
+        font-family:var(--font-display); font-size:1.05rem; line-height:1.58;
+        border-left:3px solid #8c2623;
+      }
+      .dialogue .who{ color:#b83b36; font-style:italic; }
+      .room-name .chap{ font-family:var(--font-apple); letter-spacing:.1em; font-size:.66rem; }
+      .tbtn{
+        text-decoration:none;
+        border-radius:999px;
+        background:var(--panel);
+        backdrop-filter:blur(18px) saturate(140%);
+        -webkit-backdrop-filter:blur(18px) saturate(140%);
+        box-shadow:inset 0 1px 0 rgba(242,234,214,.08);
+      }
+      .tbtn:hover{ border-color:rgba(207,169,92,.45); color:#cfa95c; }
+      .tbtn.gold{
+        background:linear-gradient(180deg,#9c2b27,#751d1a);
+        border-color:rgba(214,114,108,.35);
+        color:#f3eee4;
+        box-shadow:inset 0 1px 0 rgba(255,225,220,.2), 0 6px 20px rgba(117,29,26,.42);
+      }
+      .tbtn.gold:hover{ color:#ffffff; filter:brightness(1.1); }
+      .scene-shell{ border-radius:16px; border-color:rgba(210,198,170,.16); }
+      .nav-arrow{
+        border-radius:999px;
+        width:44px; height:44px;
+        background:rgba(12,14,15,.65);
+        border:1px solid rgba(210,198,170,.16);
+        backdrop-filter:blur(16px) saturate(140%);
+        -webkit-backdrop-filter:blur(16px) saturate(140%);
+      }
+      .room-tag{
+        border-radius:999px;
+        background:rgba(12,14,15,.68);
+        border:1px solid rgba(210,198,170,.14);
+        backdrop-filter:blur(14px);
+        -webkit-backdrop-filter:blur(14px);
+      }
+      .controls-hint, .dialogue, .inv-wrap, .card{
+        border-radius:14px;
+        backdrop-filter:blur(20px) saturate(140%);
+        -webkit-backdrop-filter:blur(20px) saturate(140%);
+        box-shadow:var(--shadow);
+      }
+      .overlay{ backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); background:rgba(5,6,7,.78); }
+      .btn{
+        border-radius:999px;
+        background:linear-gradient(180deg,#9c2b27,#751d1a);
+        border:1px solid rgba(214,114,108,.35);
+        color:#f3eee4;
+        box-shadow:inset 0 1px 0 rgba(255,225,220,.2), 0 8px 22px rgba(117,29,26,.42);
+      }
+      .btn.ghost{
+        background:rgba(226,221,208,.05);
+        color:var(--ink);
+        border:1px solid var(--line);
+        box-shadow:inset 0 1px 0 rgba(242,234,214,.08);
+      }
+      .slot{ border-radius:12px; }
+      .slot.selected{ border-color:#b83b36; box-shadow:0 0 0 2px rgba(184,59,54,.65) inset, 0 4px 12px rgba(0,0,0,.4); }
+      .toast{
+        border-radius:999px;
+        background:rgba(14,16,17,.88);
+        border:1px solid rgba(210,198,170,.18);
+        backdrop-filter:blur(18px) saturate(140%);
+        -webkit-backdrop-filter:blur(18px) saturate(140%);
+      }
+      .game-user{ font-size:.8rem; font-weight:600; color:#cfa95c; }
+      .player .held-item{ border-color:#b83b36; }
       .inv-server{
-        margin-top:8px; font-size:.82rem; color:var(--ink-soft);
+        margin-top:8px; font-size:.8rem; color:var(--ink-soft);
         border-top:1px dashed var(--slot-line); padding-top:8px; line-height:1.5;
       }
-      .save-hint{ font-size:.8rem; color:var(--ink-soft); }
+      .save-hint{ font-size:.78rem; color:var(--ink-soft); }
+
+      /* ---------- khung tro chuyen nhan vat ---------- */
+      .chat-card{ text-align:left; max-width:520px; }
+      .chat-head{
+        display:flex; align-items:center; gap:12px; padding-bottom:12px;
+        border-bottom:1px solid var(--line); margin-bottom:14px;
+      }
+      .chat-avatar{
+        width:44px; height:44px; border-radius:999px; flex-shrink:0;
+        background:radial-gradient(circle at 30% 30%, rgba(184,59,54,.45), rgba(14,16,17,.9));
+        border:1px solid rgba(207,169,92,.35);
+        display:flex; align-items:center; justify-content:center;
+        font-family:var(--font-display); font-size:1.2rem; color:#cfa95c;
+      }
+      .chat-meta{ flex:1; min-width:0; }
+      .chat-meta h3{
+        margin:0; font-family:var(--font-display); font-size:1.2rem; font-weight:600; color:var(--ink);
+      }
+      .chat-meta span{ font-size:.78rem; color:var(--ink-soft); display:block; }
+      .chat-body{
+        font-family:var(--font-display); font-size:1.08rem; line-height:1.65;
+        color:var(--ink); min-height:72px; margin-bottom:14px;
+        padding:12px 14px; border-radius:12px;
+        background:rgba(7,8,9,.52); border:1px solid var(--line);
+        border-left:3px solid #8c2623;
+      }
+      .chat-choices{ display:flex; flex-direction:column; gap:8px; margin-bottom:10px; }
+      .chat-choice{
+        text-align:left; background:rgba(226,221,208,.05); color:var(--ink);
+        border:1px solid var(--line); border-radius:12px; padding:10px 14px;
+        font-size:.9rem; font-weight:500; transition:border-color .15s, background .15s;
+      }
+      .chat-choice:hover{ border-color:rgba(207,169,92,.48); background:rgba(207,169,92,.1); }
+      .chat-foot{ display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap; }
+      .chat-foot .btn{ margin-top:0; }
     </style>
   </head>
   <body>
     <div class="wrap">
       <div class="topbar">
-        <div class="room-name"><span id="roomName">Phòng trọ số 4</span><span class="chap">Quạ Đen · Chương 1</span></div>
+        <div class="room-name"><span id="roomName">Phòng khách</span><span class="chap">Quạ Đen · Chương 1</span></div>
         <button class="tbtn" id="btnHint" type="button">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.8.7 1 1.5 1 2.5h6c0-1 .2-1.8 1-2.5A6 6 0 0 0 12 3z"/></svg>
           Gợi ý
+        </button>
+        <button class="tbtn" id="btnChat" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Trò chuyện
         </button>
         <button class="tbtn" id="btnSound" type="button" aria-label="Bật tắt âm thanh">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H3v6h3l5 4zM15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>
@@ -292,10 +463,12 @@
         <span class="game-user" id="gameUser"></span>
       </div>
 
-      <div class="scene-shell" id="sceneShell">
-        <!-- ============ ROOM A : PHÒNG KHÁCH ============ -->
+      <div class="game-layout">
+        <div class="game-main">
+          <div class="scene-shell" id="sceneShell">
+        <!-- ============ ROOM A : PHÒNG KHÁCH DINH THỰ ============ -->
         <div class="scene active" id="scene-A">
-          <svg viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice" aria-label="Phòng trọ">
+          <svg viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice" aria-label="Phòng khách">
             <rect x="0" y="0" width="800" height="432" fill="#66766c"/>
             <rect x="0" y="0" width="800" height="432" fill="#000" opacity="0.06"/>
             <rect x="0" y="404" width="800" height="28" fill="#57665d"/>
@@ -403,9 +576,9 @@
           <button class="hotspot" data-act="door" style="left:79.75%;top:24.7%;width:15.5%;height:62.3%" aria-label="Cửa chính"></button>
         </div>
 
-        <!-- ============ ROOM B : PHÒNG NGỦ ============ -->
+        <!-- ============ ROOM B : PHÒNG LÀM VIỆC ============ -->
         <div class="scene" id="scene-B">
-          <svg viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice" aria-label="Hành lang">
+          <svg viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice" aria-label="Phòng làm việc">
             <rect x="0" y="0" width="800" height="432" fill="#71606a"/>
             <rect x="0" y="404" width="800" height="28" fill="#61525b"/>
             <rect x="0" y="432" width="800" height="168" fill="#5f4634"/>
@@ -506,9 +679,9 @@
           <button class="hotspot" data-act="wardrobe" style="left:77.25%;top:9.7%;width:19.25%;height:69%" aria-label="Tủ quần áo"></button>
         </div>
 
-        <!-- ============ ROOM C : BẾP ============ -->
+        <!-- ============ ROOM C : TẦNG HẦM ============ -->
         <div class="scene" id="scene-C">
-          <svg viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice" aria-label="Sân thượng">
+          <svg viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice" aria-label="Tầng hầm">
             <rect x="0" y="0" width="800" height="432" fill="#68755e"/>
             <rect x="0" y="404" width="800" height="28" fill="#596650"/>
             <rect x="0" y="432" width="800" height="168" fill="#8a7a5f"/>
@@ -657,35 +830,39 @@
         <div class="vignette"></div>
         <button class="nav-arrow left" id="navLeft" type="button" aria-label="Đi sang phòng bên trái">‹</button>
         <button class="nav-arrow right" id="navRight" type="button" aria-label="Đi sang phòng bên phải">›</button>
-        <div class="room-tag" id="roomTag">Phòng trọ số 4</div>
+        <div class="room-tag" id="roomTag">Phòng khách</div>
       </div>
 
       <div class="controls-hint">
-        <span><b>Cách chơi mới:</b> Chạm vào <b>sàn nhà</b> để nhân vật đi tới đó · Chạm vào <b>đồ vật</b> thì nhân vật sẽ tự đi tới, cúi nhặt / tương tác · Chọn đồ trong túi thì nhân vật <b>cầm trên tay</b> thật</span>
-        <span><kbd>←</kbd> <kbd>→</kbd> hoặc <kbd>A</kbd> <kbd>D</kbd> để đi bộ · <kbd>E</kbd> tương tác đồ gần nhất</span>
+        <span>Chạm sàn để đi · Chạm đồ vật để tương tác · Chọn đồ trong túi để cầm trên tay</span>
+        <span class="kbd-hint"><kbd>←</kbd> <kbd>→</kbd> / <kbd>A</kbd> <kbd>D</kbd> đi bộ · <kbd>E</kbd> tương tác</span>
       </div>
+        </div><!-- /.game-main -->
 
-      <div class="dialogue"><span id="dialogueText">…</span></div>
-      <div class="objective">Mục tiêu: <b id="objectiveText">Tìm Trang sổ số 1 mà chú Bảo giấu trong phòng trọ, rồi mở cửa rời khỏi đây.</b></div>
+        <aside class="game-side">
+          <div class="dialogue"><span id="dialogueText"><span class="who">Bà Lan:</span> Cháu vào tìm đồ cũ của chú Bảo đi, nhưng nhớ rời khỏi dinh thự trước 18:30.</span></div>
+          <div class="objective">Mục tiêu: <b id="objectiveText">Khám phá dinh thự cũ họ Trần và mở cửa tầng hầm trước 18:30.</b></div>
 
-      <div class="inv-wrap">
-        <div class="inv-label">Túi đồ, chạm vào một món để nhân vật cầm lên tay, rồi đi tới nơi muốn dùng và chạm vào đó</div>
-        <div class="inv" id="inventory"></div>
-        <div class="inv-server" id="serverInv">Túi đồ trên máy chủ: đang kiểm tra đăng nhập...</div>
-        <div class="save-hint">Bấm Lưu game để lưu tiến trình Chương 1 lên máy chủ (cần đăng nhập). Bấm Tải game để tiếp tục lần chơi trước.</div>
-      </div>
+          <div class="inv-wrap">
+            <div class="inv-label">Túi đồ</div>
+            <div class="inv" id="inventory"></div>
+            <div class="inv-server" id="serverInv">Túi đồ trên máy chủ: đang kiểm tra đăng nhập...</div>
+            <div class="save-hint">Lưu / Tải tiến trình yêu cầu đăng nhập.</div>
+          </div>
+        </aside>
+      </div><!-- /.game-layout -->
 
-      <p class="footer-note">Quạ Đen, Chương 1, bản demo cho đồ án Lập trình Web, Nhóm 5. Game thuần HTML / CSS / JS, nhân vật đi bộ trong phòng, tự đi tới đồ vật, cúi xuống nhặt đồ và cầm vật trên tay khi bạn chọn dùng. Đăng nhập để lưu tiến trình lên máy chủ.</p>
+      <p class="footer-note">Quạ Đen · Chương 1 · Nhóm 5 LTW</p>
     </div>
 
     <!-- intro -->
     <div class="overlay open" id="introOverlay">
       <div class="card">
         <h2>Quạ Đen</h2>
-        <p class="sub">Chương 1: Căn phòng khóa trái ở hẻm 41</p>
-        <p>Sáng 10/03/1998. Bạn là Đặng Minh An, sinh viên báo chí, vừa tới nhà trọ Sáu Lành ở hẻm 41, quận 5 để tìm chú Bảo. Phòng trọ số 4 khóa trái từ bên trong. Trong phòng, chú giấu Trang sổ số 1, trang đầu tiên trong 6 trang sổ ghi số cân thật.</p>
-        <p class="sub"><b>Nhân vật của bạn đi lại được thật:</b> chạm vào sàn để đi tới, chạm vào đồ vật để nhân vật tự bước tới nhặt / mở / dùng đồ. Đồ được chọn trong túi sẽ hiện trên tay nhân vật.</p>
-        <button class="btn" id="btnStart" type="button">Bước vào phòng trọ</button>
+        <p class="sub">Chương 1: Dinh thự bị lãng quên</p>
+        <p>17:00, dinh thự cũ của gia đình họ Trần ở Quận 3, bỏ không đã 5 năm. Bạn là Đặng Minh An, sinh viên báo chí. Bà Nguyễn Thị Lan cho bạn vào nhà tìm đồ cũ của chú Bảo và dặn phải rời đi trước 18:30 khi bà quay lại.</p>
+        <p class="sub">Trên trang đầu cuốn sổ bìa đen có vẽ một con quạ đen và dòng chữ: <b>Chân nến trong phòng khách không đứng đúng chỗ của nó.</b></p>
+        <button class="btn" id="btnStart" type="button">Bước vào dinh thự</button>
       </div>
     </div>
 
@@ -694,16 +871,35 @@
       <div class="card" id="closeCard"></div>
     </div>
 
+    <!-- character dialogue -->
+    <div class="overlay" id="chatOverlay">
+      <div class="card chat-card" id="chatCard">
+        <div class="chat-head">
+          <div class="chat-avatar" id="chatAvatar">L</div>
+          <div class="chat-meta">
+            <h3 id="chatSpeaker">Bà Nguyễn Thị Lan</h3>
+            <span id="chatRole">Mẹ của Quân · Dinh thự họ Trần</span>
+          </div>
+          <button class="close-x" id="chatClose" type="button" aria-label="Đóng hội thoại">✕</button>
+        </div>
+        <div class="chat-body" id="chatBody">Cháu vào tìm đồ cũ của chú Bảo đi, nhưng nhớ rời khỏi nhà trước 18:30.</div>
+        <div class="chat-choices" id="chatChoices"></div>
+        <div class="chat-foot">
+          <button class="btn small" id="chatNext" type="button">Tiếp tục</button>
+        </div>
+      </div>
+    </div>
+
     <!-- ending -->
     <div class="overlay" id="endOverlay">
       <div class="card">
-        <h2>Cánh cửa mở ra</h2>
-        <p>Bạn tìm thấy Trang sổ số 1, trang đầu tiên trong 6 trang sổ của chú Bảo. Ngoài hành lang, tiếng quạ kêu vang rồi xa dần. Còn 5 trang nữa, và đồng hồ đang chạy về phía 09:00 sáng 11/03.</p>
-        <p class="sub">Trang sổ ghi: chuyến 19/01, sổ 240 kg, cân thật 226 kg, lệch 14 kg.</p>
+        <h2>Cửa tầng hầm mở ra</h2>
+        <p>Bạn mở được cửa tầng hầm ngay trước lúc bà Lan về tới, phát hiện Trần Minh Quân bị nhốt lâu ngày. Bạn gọi điện báo công an phường và thuyết phục gia đình ra trình diện.</p>
+        <p class="sub">Bạn nhận được Trang sổ số 1: chú Bảo ghi mình đã tới thư viện cũ ở Quận 1 để kiểm tra một dấu quạ đen khác.</p>
         <div class="end-stats">
           <div class="st"><b id="endTime">0:00</b><span>Thời gian</span></div>
           <div class="st"><b id="endHints">0</b><span>Gợi ý đã dùng</span></div>
-          <div class="st"><b>11</b><span>Câu đố đã giải</span></div>
+          <div class="st"><b>8</b><span>Câu đố Chương 1</span></div>
         </div>
         <button class="btn" id="btnAgain" type="button">Chơi lại từ đầu</button>
       </div>
@@ -1571,6 +1767,91 @@
       qdRefreshServerInv();
 
       renderInv();
+    })();
+    </script>
+    <script>
+    /* UI tro chuyen nhan vat Chuong 1 (Dinh thu bi lang quen). */
+    (function(){
+      "use strict";
+      var nodes = {
+        start: {
+          avatar: "L",
+          speaker: "Bà Nguyễn Thị Lan",
+          role: "Mẹ của Quân · 17:00, Dinh thự họ Trần (Quận 3)",
+          text: "Cháu vào tìm lại đồ cũ của chú cháu từng để quên đi. Nhớ phải ra khỏi nhà trước 18 giờ 30, lúc cô quay lại.",
+          choices: [
+            { label: "Xem lại trang đầu cuốn sổ bìa đen của chú Bảo", next: "so_chu" },
+            { label: "Nghe cuộc gọi điện thoại bàn giữa chương (18:15)", next: "cuoc_goi" },
+            { label: "Xem đoạn kết khi mở được cửa tầng hầm", next: "ket_thuc" }
+          ]
+        },
+        so_chu: {
+          avatar: "B",
+          speaker: "Cuốn sổ bìa đen (Chú Bảo)",
+          role: "Trang đầu · Dấu quạ đen",
+          text: "Gia đình họ Trần từng rất giàu, người cha nghiêm khắc, người con trai duy nhất chịu áp lực lớn vì chuyện học hành và thi cử, sau đó mất liên lạc với bạn bè. Chân nến trong phòng khách không đứng đúng chỗ của nó.",
+          choices: [
+            { label: "Quay lại", next: "start" }
+          ]
+        },
+        cuoc_goi: {
+          avatar: "L",
+          speaker: "Bà Nguyễn Thị Lan (qua điện thoại bàn)",
+          role: "Biến cố giữa chương · 18:15",
+          text: "Alô, cô báo trước là cô sẽ về sớm hơn dự tính 15 phút. Cháu thu xếp ra khỏi nhà sớm nhé.",
+          choices: [
+            { label: "Quay lại", next: "start" }
+          ]
+        },
+        ket_thuc: {
+          avatar: "A",
+          speaker: "Đặng Minh An",
+          role: "Kết thúc Chương 1 · Tầng hầm",
+          text: "Quân bị nhốt lâu ngày dưới tầng hầm và đang suy nhược. Cháu đã gọi điện báo công an tới hỗ trợ, cô Lan và Quân hãy cùng ra trình diện và khai rõ sự việc.",
+          choices: []
+        }
+      };
+      var btnChat = document.getElementById("btnChat");
+      var overlay = document.getElementById("chatOverlay");
+      var avatar = document.getElementById("chatAvatar");
+      var speaker = document.getElementById("chatSpeaker");
+      var role = document.getElementById("chatRole");
+      var body = document.getElementById("chatBody");
+      var choices = document.getElementById("chatChoices");
+      var btnNext = document.getElementById("chatNext");
+      var btnClose = document.getElementById("chatClose");
+      if (!btnChat || !overlay) return;
+
+      function showNode(key) {
+        var n = nodes[key] || nodes.start;
+        avatar.textContent = n.avatar;
+        speaker.textContent = n.speaker;
+        role.textContent = n.role;
+        body.textContent = n.text;
+        choices.innerHTML = "";
+        if (n.choices && n.choices.length) {
+          btnNext.classList.add("hidden");
+          n.choices.forEach(function (c) {
+            var b = document.createElement("button");
+            b.type = "button";
+            b.className = "chat-choice";
+            b.textContent = c.label;
+            b.addEventListener("click", function () { showNode(c.next); });
+            choices.appendChild(b);
+          });
+        } else {
+          btnNext.classList.remove("hidden");
+        }
+      }
+      btnChat.addEventListener("click", function () {
+        showNode("start");
+        overlay.classList.add("open");
+      });
+      btnClose.addEventListener("click", function () { overlay.classList.remove("open"); });
+      btnNext.addEventListener("click", function () { overlay.classList.remove("open"); });
+      overlay.addEventListener("click", function (e) {
+        if (e.target === overlay) overlay.classList.remove("open");
+      });
     })();
     </script>
   </body>
