@@ -59,7 +59,7 @@
 - NFR05: mọi câu SQL dùng prepared statement, không nối chuỗi trực tiếp từ input người dùng
 - NFR06: giao diện chạy được trên Chrome và Edge bản mới nhất, màn hình 1366x768 trở lên
 - NFR07: dữ liệu nhập vào được kiểm tra ở cả front-end và back-end
-- NFR08: lỗi back-end trả về JSON có `success: false` và `message`, không lộ câu SQL hay đường dẫn file
+- NFR08: lỗi back-end trả về JSON có `ok: false` và `error`, không lộ câu SQL hay đường dẫn file
 - NFR09: mã nguồn chia rõ 3 lớp: front-end, back-end API, cơ sở dữ liệu
 - NFR10: toàn bộ text trong game dùng tiếng Việt có dấu, bảng mã utf8mb4
 
@@ -133,3 +133,18 @@
 - AC06: nhập mã két khác 0312 không mở được két, nhập 0312 mở được
 - AC07: dữ liệu lưu thật trong MySQL, kiểm tra bằng câu SELECT thấy đúng dòng vừa tạo
 - AC08: tắt trình duyệt rồi mở lại, bản lưu vẫn còn, không mất tiến trình
+
+## 1.6. Tổng hợp trạng thái chức năng hiện tại
+
+- **Đã xong:**
+  - Tài khoản (FR01–FR05): đăng ký, kiểm tra trùng username/email, băm mật khẩu `password_hash`/`password_verify`, đăng nhập và đăng xuất bằng PHP session cookie (`PHPSESSID`, `credentials: "include"`).
+  - API nền tảng: đủ 11/11 endpoint (`register`, `login`, `logout`, `chapters`, `chapter`, `inventory`, `pickup`, `solve`, `save`, `load`, `leaderboard`) trong `backend/api/index.php`.
+  - Bảng xếp hạng (FR19–FR21): xem theo từng chương (1–6), chế độ live tự làm mới 10 giây trong `frontend/js/leaderboard.js`.
+  - Dữ liệu Chương 1 (FR22–FR23): đủ 8 câu đố và 8 manh mối trong `backend/db/seed.sql`; đối chiếu đáp án ở server qua `action=solve` (không lộ `dap_an` qua API `chapter`); tích hợp `frontend/js/puzzle.js` vào `frontend/game.html`.
+  - Giao diện nền tảng: 4 trang (`index.html`, `auth.html`, `game.html`, `leaderboard.html`) responsive kèm ảnh chụp minh chứng trong `docs/screenshots/`.
+- **Đang làm:**
+  - Hoàn thiện luồng túi đồ/vật phẩm (`inventory`, `pickup`) và nối đầy đủ lưu/tải game (`save`, `load`) trong `game.html`.
+  - Đồng bộ lại hình nền phòng B, phòng C và tên 6 chương thống nhất giữa giao diện và `seed.sql`.
+- **Chưa làm:**
+  - Nội dung đầy đủ Chương 2 đến Chương 6 (17 phòng còn lại và 38 câu đố còn lại).
+  - Kiểm thử tổng thể xuyên suốt cả 6 chương từ đầu đến cuối.
