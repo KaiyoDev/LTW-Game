@@ -72,6 +72,9 @@
         var data = null;
         try { data = text ? JSON.parse(text) : null; } catch (e) { data = null; }
         if (!res.ok || (data && data.ok === false)) {
+          if (res.status === 401) {
+            clearToken();
+          }
           var msg = (data && (data.error || data.message)) || ("Lỗi " + res.status + " từ máy chủ.");
           var err = new Error(msg);
           err.status = res.status;
