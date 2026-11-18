@@ -628,6 +628,15 @@
       if(res && res.data && res.data.ma_luu) maLuu = res.data.ma_luu;
       toast(done ? "Đã lưu: Chương 1 hoàn thành." : "Đã lưu tiến trình Chương 1 lên máy chủ.");
       qdRefreshServerInv();
+      if(done){
+        QD.api("leaderboard", {
+          method: "POST",
+          body: {
+            ma_chuong: 1,
+            thoi_gian_hoan_thanh: Math.max(1, body.thoi_gian_choi)
+          }
+        }).catch(function(){});
+      }
     }, function(err){ toast(errText(err, "lưu game")); });
   }
   /* Túi đồ lấy từ bảng TUI_DO trên server */
