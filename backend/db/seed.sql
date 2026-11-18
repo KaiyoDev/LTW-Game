@@ -163,3 +163,12 @@ INSERT INTO MANH_MOI (ma_cau_do, noi_dung) VALUES
 (6, 'To giay giau trong tu ao go duoc gap lai theo nep cu, mo dung nep se thay noi dung.'),
 (7, 'Dung guong cam tay hung anh nang mat troi de chieu sang khe toi duoi bon nuoc.'),
 (8, 'Khi nguoi la ngoai cua hoi, hay noi doi nguoi la qua de lay trang so so 1.');
+
+-- 10. Chuong 1, do vat con thieu theo bang phong cua kich ban (phan cua Dinh).
+-- vi_tri_x, vi_tri_y theo khung 800 x 600, khop hotspot trong frontend/js/game.js.
+INSERT INTO DO_VAT (ma_do_vat, ma_phong, ten_do_vat, vi_tri_x, vi_tri_y) VALUES
+(13, 2, 'Day phoi', 244, 432),
+(14, 2, 'Dien thoai ban', 555, 442),
+(15, 2, 'Cau thang len san thuong', 695, 264),
+(16, 3, 'Bon nuoc', 366, 330),
+(17, 3, 'Ong nhua chong nuoc duoi bon', 366, 372);
