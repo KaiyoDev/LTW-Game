@@ -1,0 +1,133 @@
+name: CI Check
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  lint-and-hygiene:
+    name: Lint PHP/JS & Conflict Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check for committed .env files
+        run: |
+          FOUND=$(git ls-files | grep -E '(^|/)\.env($|\.)' | grep -v '\.env\.example$' || true)
+          if [ -n "$FOUND" ]; then
+            echo "ERROR: Found committed .env file(s):"
+            echo "$FOUND"
+            exit 1
+          fi
+
+      - name: Check for unresolved merge conflict markers
+        run: |
+          if git grep -nE '^(<{7}|={7}|>{7})( |$)' -- ':!*.png' ':!*.jpg' ':!*.jpeg' ':!*.gif'; then
+            echo "ERROR: Found unresolved merge conflict markers!"
+            exit 1
+          fi
+
+      - name: Check no em-dash in frontend/backend code
+        run: |
+          if git grep -n '—' -- 'frontend/' 'backend/'; then
+            echo "ERROR: Found em-dash character in frontend/backend (see AGENTS.md)."
+            exit 1
+          fi
+
+      - name: Setup PHP 8.3
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: pdo_mysql, mbstring
+
+      - name: PHP syntax check (php -l)
+        run: |
+          find backend -name '*.php' -print0 | xargs -0 -n1 php -l
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: JavaScript syntax check (node --check)
+        run: |
+          find frontend -name '*.js' -print0 | xargs -0 -n1 node --check
+
+  db-and-api-smoke:
+    name: MySQL Schema & API Smoke Test
+    runs-on: ubuntu-latest
+    needs: lint-and-hygiene
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -proot"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=15
+
+    env:
+      DB_HOST: 127.0.0.1
+      DB_PORT: 3306
+      DB_NAME: qua_den
+      DB_USER: root
+      DB_PASS: root
+      DB_CHARSET: utf8mb4
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP 8.3
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: pdo_mysql, mbstring
+
+      - name: Import schema.sql and seed.sql
+        run: |
+          mysql -h 127.0.0.1 -u root -proot < backend/db/schema.sql
+          mysql -h 127.0.0.1 -u root -proot < backend/db/seed.sql
+
+      - name: Start PHP built-in server & run API smoke tests
+        run: |
+          php -S 127.0.0.1:8000 > /tmp/php-server.log 2>&1 &
+          SERVER_PID=$!
+          trap "kill $SERVER_PID || true" EXIT
+
+          for i in $(seq 1 20); do
+            if curl -sf "http://127.0.0.1:8000/backend/api/index.php?action=chapters" > /dev/null; then
+              break
+            fi
+            sleep 0.5
+          done
+
+          echo "1. Test GET chapters"
+          curl -sf "http://127.0.0.1:8000/backend/api/index.php?action=chapters" | grep -q '"ok":true'
+
+          echo "2. Test GET chapter=1 & verify zero dap_an leakage"
+          CHAPTER_JSON=$(curl -sf "http://127.0.0.1:8000/backend/api/index.php?action=chapter&ma_chuong=1")
+          echo "$CHAPTER_JSON" | grep -q '"ok":true'
+          if echo "$CHAPTER_JSON" | grep -q '"dap_an"'; then
+            echo "SECURITY ERROR: dap_an leaked in ?action=chapter response!"
+            exit 1
+          fi
+
+          echo "3. Test GET leaderboard=1"
+          curl -sf "http://127.0.0.1:8000/backend/api/index.php?action=leaderboard&ma_chuong=1" | grep -q '"ok":true'
+
+          echo "4. Test GET inventory without login returns 401"
+          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "http://127.0.0.1:8000/backend/api/index.php?action=inventory")
+          if [ "$HTTP_CODE" != "401" ]; then
+            echo "ERROR: Expected 401 for unauthenticated inventory, got $HTTP_CODE"
+            exit 1
+          fi
+
+          echo "All API smoke tests passed!"
