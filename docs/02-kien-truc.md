@@ -9,7 +9,7 @@
 |  - Trang: index.html, auth.html, game.html, leaderboard.html          |
 |  - Giao diện: css/style.css                                           |
 |  - Cấu hình & Logic: config.js, js/api.js, js/auth.js,                |
-|                      js/leaderboard.js                                |
+|                      js/leaderboard.js, js/puzzle.js                  |
 +-----------------------------------------------------------------------+
                   |
                   | HTTP GET / POST + JSON + Session Cookie (PHPSESSID)
@@ -51,7 +51,7 @@
   - `auth.js`: kiểm tra form, gọi đăng ký/đăng nhập/đăng xuất qua `window.QD`, cập nhật thanh điều hướng (`navLogin`, `navRegister`, `navUser`, `navLogout`).
   - `leaderboard.js`: tải bảng xếp hạng từng chương qua `window.QD`, đổi tab chương, tự làm mới mỗi 10 giây và hiển thị giờ cập nhật.
   - `puzzle.js`: nạp manh mối từ `MANH_MOI` qua `action=chapter`, gửi đáp án qua `action=solve` và gắn tương tác giải đố vào `game.html`.
-  - `game.js`: tách dần logic màn chơi từ `game.html` khi mở rộng.
+  - `game.js` *(chưa tạo file, dự kiến tách dần logic màn chơi từ `game.html` khi mở rộng)*: hiện tại logic màn chơi nằm trong `game.html`.
 
 ### Back-end (`backend/`)
 
