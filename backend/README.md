@@ -1,8 +1,7 @@
 # Backend game Quạ Đen
 
 Backend PHP thuần, khong dung framework, dung PDO noi MySQL.
-Day la khung xuong de chia viec cho nhom, moi endpoint da chay duoc
-o muc toi thieu, thanh vien nhan viec se lam tiep phan cua minh.
+Co du 11 endpoint, da test dau cuoi, xem muc "Ket qua test dau cuoi".
 
 ## Cau truc thu muc
 
@@ -96,7 +95,12 @@ kem `credentials: 'include'` de trinh duyet gui cookie session.
 | --- | --- | --- | --- |
 | `?action=register` | POST | Khong | Dang ky tai khoan moi, bang NGUOI_CHOI |
 | `?action=login` | POST | Khong | Dang nhap, mo session |
+| `?action=logout` | POST | Khong | Dang xuat, huy session |
 | `?action=chapters` | GET | Khong | Danh sach 6 chuong, kem so phong va so cau do |
+| `?action=chapter&ma_chuong=` | GET | Khong | Chi tiet 1 chuong: phong, do vat, cau do, manh moi (khong co `dap_an`) |
+| `?action=inventory` | GET | Co | Tui do cua nguoi choi |
+| `?action=pickup` | POST | Co | Nhat vat pham, nhat lai thi tang `so_luong` |
+| `?action=solve` | POST | Co | Giai cau do, doi chieu dap an o server, thuong vat pham |
 | `?action=save` | POST | Co | Luu game, bang LUU_GAME + TIEN_DO_CAU_DO |
 | `?action=load` | GET | Co | Tai ban luu moi nhat, kem tien do cau do |
 | `?action=leaderboard` | GET | Khong | Xem bang xep hang theo chuong, tang dan theo thoi gian |
@@ -184,20 +188,28 @@ curl "http://localhost:8000/backend/api/?action=leaderboard&ma_chuong=1&limit=10
   se lam o phia server trong endpoint solve.
 - Endpoint `save` va `load` chi cho sua, doc ban luu cua chinh minh.
 
-## Viec con lai cho nhom
+## Ket qua test dau cuoi
 
-Khung xuong chi co 6 endpoint toi thieu. Cac viec duoi day de thanh
-vien nhan lam tiep, moi viec viet them mot khoi `if ($action === ...)`
-trong `backend/api/index.php`, theo dung mau cac endpoint da co:
+Test bang curl tren PHP 8.4 + MariaDB 10.11 (XAMPP), schema.sql roi seed.sql tren DB moi,
+`php -l` pass cho `api/index.php` va `config.php`. Ket qua:
 
-- `logout` POST: huy session bang `session_destroy()`.
-- `chapter` GET `?ma_chuong=`: chi tiet 1 chuong, kem phong, do vat,
-  cau do. Chu y: chi select cac cot can thiet, khong select `dap_an`.
-- `inventory` GET: tui do cua nguoi dang nhap, join TUI_DO voi VAT_PHAM.
-- `pickup` POST: nhat vat pham, them vao TUI_DO, tang `so_luong` neu da co.
-- `solve` POST: nhan `ma_cau_do` va `dap_an`, kiem tra vat pham can
-  trong tui do, doi chieu dap an voi DB o phia server, ghi TIEN_DO_CAU_DO
-  va thuong vat pham neu dung. Dap an sai thi tra `correct: false`,
-  khong bao gio tra dap an dung ra ngoai.
-- Seed bo sung: kich ban co 46 cau do, hien seed moi co 18 cau mau.
-  Thanh vien phu trach cot truyen them cau do vao `db/seed.sql`.
+| Endpoint | Ket qua |
+| --- | --- |
+| register | OK, trung ten dang nhap tra 409 |
+| login | OK, sai mat khau tra 401 |
+| logout | OK, sau do inventory tra 401 |
+| chapters | OK, 6 chuong |
+| chapter | OK, chuong 1 co 3 phong, response khong co `dap_an`, chuong 99 tra 404 |
+| inventory | OK, chua dang nhap tra 401 |
+| pickup | OK, nhat moc ao 2 lan thi `so_luong` = 2, khong tao dong moi; trang so khong nhat truc tiep duoc (403) |
+| solve | OK, sai tra `correct: false`, dung co dau hoac khong dau deu nhan, thieu vat pham can tra 403, thuong vat pham chi nhan 1 lan |
+| save | OK, ghi LUU_GAME + TIEN_DO_CAU_DO |
+| load | OK, tra ban luu kem tien do cau do |
+| leaderboard | OK, GET theo chuong, POST ghi them dong moi |
+
+## Quy uoc tra loi
+
+- Thanh cong: `{ "ok": true, "data": ... }`. Loi: `{ "ok": false, "error": "..." }` kem ma HTTP.
+- `solve` dap an sai van tra HTTP 200 voi `data.correct = false`, de frontend phan biet sai dap an voi loi he thong.
+- `solve` thieu vat pham can tra 403, cau do chua co dap an trong DB tra 409.
+- `pickup` chi nhat duoc vat pham gan voi 1 do vat (`VAT_PHAM.ma_do_vat` khac NULL). Trang so la phan thuong cua cau do, chi nhan qua `solve`.
