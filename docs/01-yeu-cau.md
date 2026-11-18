@@ -140,10 +140,10 @@
   - Tài khoản (FR01–FR05): đăng ký, kiểm tra trùng username/email, băm mật khẩu `password_hash`/`password_verify`, đăng nhập và đăng xuất bằng PHP session cookie (`PHPSESSID`, `credentials: "include"`).
   - API nền tảng: đủ 11/11 endpoint (`register`, `login`, `logout`, `chapters`, `chapter`, `inventory`, `pickup`, `solve`, `save`, `load`, `leaderboard`) trong `backend/api/index.php`.
   - Bảng xếp hạng (FR19–FR21): xem theo từng chương (1–6), chế độ live tự làm mới 10 giây trong `frontend/js/leaderboard.js`.
-  - Dữ liệu Chương 1 (FR22–FR23): đủ 8 câu đố và 8 manh mối trong `backend/db/seed.sql`; đối chiếu đáp án ở server qua `action=solve` (không lộ `dap_an` qua API `chapter`); tích hợp `frontend/js/puzzle.js` vào `frontend/game.html`.
+  - Dữ liệu Chương 1 (FR22–FR23): đủ 8 câu đố, 8 manh mối và danh sách `DO_VAT` trong `backend/db/seed.sql`; đối chiếu đáp án ở server qua `action=solve` (không lộ `dap_an` qua API `chapter`); tích hợp `frontend/js/puzzle.js` và `frontend/js/game.js` vào `frontend/game.html`.
+  - Màn chơi & Lưu game Chương 1 (FR08–FR11, FR15–FR16): `frontend/js/game.js` đi đủ 3 phòng qua cửa thật, giải 4 câu `1.1, 1.2, 1.4, 1.8` qua `solve`, nhặt đồ qua `pickup`, đồng bộ túi đồ `inventory` (hiển thị số lượng) và lưu/tải game qua `save`/`load`.
   - Giao diện nền tảng: 4 trang (`index.html`, `auth.html`, `game.html`, `leaderboard.html`) responsive kèm ảnh chụp minh chứng trong `docs/screenshots/`.
 - **Đang làm:**
-  - Hoàn thiện luồng túi đồ/vật phẩm (`inventory`, `pickup`) và nối đầy đủ lưu/tải game (`save`, `load`) trong `game.html`.
   - Đồng bộ lại hình nền phòng B, phòng C và tên 6 chương thống nhất giữa giao diện và `seed.sql`.
 - **Chưa làm:**
   - Nội dung đầy đủ Chương 2 đến Chương 6 (17 phòng còn lại và 38 câu đố còn lại).
