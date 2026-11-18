@@ -9,7 +9,7 @@
 |  - Trang: index.html, auth.html, game.html, leaderboard.html          |
 |  - Giao diện: css/style.css                                           |
 |  - Cấu hình & Logic: config.js, js/api.js, js/auth.js,                |
-|                      js/leaderboard.js                                |
+|                      js/leaderboard.js, js/puzzle.js                  |
 +-----------------------------------------------------------------------+
                   |
                   | HTTP GET / POST + JSON + Session Cookie (PHPSESSID)
@@ -47,16 +47,16 @@
 - `css/style.css`: giao diện responsive (PC, tablet, mobile) phong cách Rusty Lake Noir, Sài Gòn 1998, điểm nhấn vàng đồng `#d4a017`.
 - `config.js`: khai báo địa chỉ gốc API mặc định `window.QUA_DEN_API_BASE = "http://localhost:8000/backend/api"` và chương hiện tại.
 - `js/`:
-  - `api.js`: lớp trung gian `window.QD` gọi API bằng `fetch`, chuẩn hóa URL và xử lý JSON/lỗi mạng.
+  - `api.js`: lớp trung gian `window.QD` gọi API bằng `fetch` (`credentials: "include"`), chuẩn hóa URL, xử lý `401` và JSON/lỗi mạng; cung cấp đầy đủ hàm gọi 11 endpoint.
   - `auth.js`: kiểm tra form, gọi đăng ký/đăng nhập/đăng xuất qua `window.QD`, cập nhật thanh điều hướng (`navLogin`, `navRegister`, `navUser`, `navLogout`).
   - `leaderboard.js`: tải bảng xếp hạng từng chương qua `window.QD`, đổi tab chương, tự làm mới mỗi 10 giây và hiển thị giờ cập nhật.
-  - `game.js`: tách dần logic màn chơi từ `game.html` khi mở rộng.
+  - `puzzle.js`: nạp manh mối từ `MANH_MOI` qua `action=chapter`, gửi đáp án qua `action=solve` và gắn tương tác giải đố vào `game.html`.
+  - `game.js` *(chưa tạo file, dự kiến tách dần logic màn chơi từ `game.html` khi mở rộng)*: hiện tại logic màn chơi nằm trong `game.html`.
 
 ### Back-end (`backend/`)
 
 - `api/index.php`: router API duy nhất, đọc tham số `?action=`, trả JSON kèm mã HTTP phù hợp.
-  - 6 action khung xương đang chạy: `register`, `login`, `chapters`, `save`, `load`, `leaderboard` (GET và POST).
-  - 5 action nhóm đang hoàn thiện tiếp theo [04-api.md](04-api.md): `logout`, `chapter`, `inventory`, `pickup`, `solve`.
+  - Đủ 11 action đang chạy theo [04-api.md](04-api.md): `register`, `login`, `logout`, `chapters`, `chapter`, `inventory`, `pickup`, `solve`, `save`, `load`, `leaderboard` (GET và POST).
 - `config.php`: đọc thông tin kết nối từ `.env` (mẫu tại `backend/.env.example`), tạo đối tượng `PDO` với bảng mã `utf8mb4`.
 - `db/schema.sql`: tạo database `qua_den`, đủ 11 bảng, 16 khóa ngoại và dữ liệu khung chương 1.
 - `db/seed.sql`: nạp dữ liệu mẫu cho 6 chương, 20 phòng, đồ vật, vật phẩm, câu đố và manh mối.

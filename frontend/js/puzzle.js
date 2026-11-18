@@ -173,7 +173,7 @@
      Server tự chuẩn hóa tiếng Việt (có dấu và không dấu đều hợp lệ).
      Server kiểm tra vật phẩm cần và trả về vật phẩm thưởng nếu có. */
   function solvePuzzle(maCauDo, dapAn, maLuu) {
-    if (!window.QD || typeof QD.solve !== "function") {
+    if (!window.QD || (typeof QD.solve !== "function" && typeof QD.api !== "function")) {
       return Promise.reject(new Error("Lớp gọi API (QD.solve) chưa sẵn sàng."));
     }
     if (typeof QD.isLoggedIn === "function" && !QD.isLoggedIn()) {
@@ -182,8 +182,12 @@
     if (!dapAn || !String(dapAn).trim()) {
       return Promise.reject(new Error("Đáp án không được để trống."));
     }
-    return QD.solve(maCauDo, dapAn, maLuu).then(function (res) {
-      var data = QD.unwrap(res) || {};
+    var req = typeof QD.solve === "function"
+      ? QD.solve(maCauDo, dapAn, maLuu)
+      : QD.api("solve", { method: "POST", body: { ma_cau_do: maCauDo, dap_an: dapAn, ma_luu: maLuu || 0 } });
+
+    return req.then(function (res) {
+      var data = (typeof QD.unwrap === "function" ? QD.unwrap(res) : (res && res.data)) || {};
       if (data.correct) {
         solvedCache[maCauDo] = true;
       }
@@ -191,8 +195,18 @@
         correct: !!data.correct,
         maCauDo: data.ma_cau_do || maCauDo,
         lyDo: data.ly_do || null,
-        thuong: data.thuong || null
+        thuong: data.vat_pham_thuong || data.thuong || null
       };
+    }).catch(function (err) {
+      if (err && err.status === 403) {
+        return {
+          correct: false,
+          maCauDo: maCauDo,
+          lyDo: "thieu_vat_pham",
+          thuong: null
+        };
+      }
+      throw err;
     });
   }
 
@@ -216,8 +230,8 @@
      - Đồng bộ nội dung hộp thoại Gợi ý từ bảng MANH_MOI.
      - Cho phép tương tác giải đố cho các câu 1.3, 1.5, 1.6, 1.7. */
   function enhanceGameUI() {
-    var modalCard = document.getElementById("modalCard");
-    var modal = document.getElementById("modal");
+    var modalCard = document.getElementById("closeCard") || document.getElementById("modalCard");
+    var modal = document.getElementById("closeOverlay") || document.getElementById("modal");
     if (!modalCard) return;
 
     function closeModal() {
@@ -236,14 +250,21 @@
       if (!h2) return;
       var title = h2.textContent.trim();
 
-      // 1. Tự động đồng bộ nội dung Gợi ý từ bảng MANH_MOI
+      // 1. Bổ sung gợi ý từ bảng MANH_MOI (giữ nguyên gợi ý theo phòng của game.html)
       if (title === "Gợi ý") {
-        var p = modalCard.querySelector("p");
-        if (p && !p.hasAttribute("data-manh-moi-synced")) {
-          p.setAttribute("data-manh-moi-synced", "1");
+        if (!modalCard.querySelector("[data-manh-moi-synced]")) {
           var currentHintText = getCurrentHint();
           if (currentHintText) {
-            p.textContent = currentHintText;
+            var hintNote = document.createElement("p");
+            hintNote.className = "sub";
+            hintNote.setAttribute("data-manh-moi-synced", "1");
+            hintNote.textContent = "Manh mối: " + currentHintText;
+            var firstSub = modalCard.querySelector("p.sub");
+            if (firstSub && firstSub.parentNode) {
+              firstSub.parentNode.insertBefore(hintNote, firstSub);
+            } else {
+              modalCard.appendChild(hintNote);
+            }
           }
         }
         return;
@@ -319,8 +340,8 @@
         return;
       }
 
-      // 4. Câu 1.7: Gương cầm tay hứng nắng
-      if (title === "Gương cầm tay" && !modalCard.querySelector("#btnSolveMirror")) {
+      // 4. Câu 1.7: Gương cầm tay hứng nắng (mở trên modal Gương bàn trang điểm)
+      if ((title === "Gương bàn trang điểm" || title === "Gương cầm tay") && !modalCard.querySelector("#btnSolveMirror")) {
         var btnMirror = document.createElement("button");
         btnMirror.className = "btn";
         btnMirror.id = "btnSolveMirror";
@@ -358,24 +379,17 @@
         bindClose();
         return;
       }
-    });
 
-    observer.observe(modalCard, { childList: true, subtree: true });
-
-    // 5. Câu 1.5: Gắn xử lý giải đố cho đài radio
-    var radioHotspot = document.querySelector('.hotspot[data-act="radio"]');
-    if (radioHotspot) {
-      radioHotspot.addEventListener("click", function (e) {
-        e.stopPropagation();
-        var html = '<button class="close-x" type="button" data-close>✕</button>' +
-          "<h2>Cuộn băng cát-xét</h2>" +
-          "<p>Chiếc đài radio cũ đang phát một cuộn băng ghi âm lúc nửa đêm: ngoài tiếng mưa rơi trên mái tôn, bạn nghe thấy một âm thanh điểm giờ quen thuộc.</p>" +
+      // 5. Câu 1.5: Giải đố cuộn băng trong modal Đài radio (không chặn luồng lắp pin của game.html)
+      if (title === "Đài radio" && !modalCard.querySelector("#btnSolveTape")) {
+        var wrap = document.createElement("div");
+        wrap.style.marginTop = "12px";
+        wrap.innerHTML =
           '<p class="sub">Gõ âm thanh bạn nghe được trong cuộn băng (gợi ý: tiếng mưa và tiếng...):</p>' +
           '<input class="riddle-input" id="qdTapeInput" type="text" placeholder="Gõ âm thanh..." autocomplete="off" />' +
           '<p class="sub" id="qdTapeMsg"></p>' +
-          '<button class="btn" type="button" id="btnSolveTape" style="margin-top:10px;">Nghe và trả lời</button>';
-        modalCard.innerHTML = html;
-        if (modal) modal.classList.add("open");
+          '<button class="btn" type="button" id="btnSolveTape" style="margin-top:8px;">Nghe và trả lời</button>';
+        modalCard.appendChild(wrap);
         bindClose();
 
         var tapeInput = document.getElementById("qdTapeInput");
@@ -383,7 +397,6 @@
         var btnTape = document.getElementById("btnSolveTape");
 
         if (btnTape && tapeInput) {
-          tapeInput.focus();
           btnTape.onclick = function () {
             var val = tapeInput.value.trim();
             if (!val) {
@@ -415,8 +428,11 @@
             });
           };
         }
-      }, true);
-    }
+        return;
+      }
+    });
+
+    observer.observe(modalCard, { childList: true, subtree: true });
   }
 
   /* Khởi tạo tự động khi trang đã sẵn sàng */
