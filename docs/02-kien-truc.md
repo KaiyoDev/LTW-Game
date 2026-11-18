@@ -42,10 +42,10 @@
 
 - `index.html`: trang chủ giới thiệu cốt truyện, danh sách 6 chương, bảng xếp hạng thu nhỏ Chương 1.
 - `auth.html`: màn hình đăng nhập và đăng ký tài khoản.
-- `game.html`: màn chơi Chương 1 (3 phòng, di chuyển, nhặt đồ, giải câu đố, lưu/tải game).
+- `game.html`: màn chơi Chương 1 (3 phòng, di chuyển, nhặt đồ, giải câu đố, khung trò chuyện nhân vật, lưu/tải game).
 - `leaderboard.html`: bảng xếp hạng theo từng chương (Chương 1 đến Chương 6), chế độ live tự tải lại mỗi 10 giây.
-- `css/style.css`: giao diện chung phong cách tối, Sài Gòn 1998, điểm nhấn vàng đồng `#d4a017`.
-- `config.js`: khai báo địa chỉ gốc API `window.QUA_DEN_API_BASE` và chương mặc định.
+- `css/style.css`: giao diện responsive (PC, tablet, mobile) phong cách Rusty Lake Noir, Sài Gòn 1998, điểm nhấn vàng đồng `#d4a017`.
+- `config.js`: khai báo địa chỉ gốc API mặc định `window.QUA_DEN_API_BASE = "http://localhost:8000/backend/api"` và chương hiện tại.
 - `js/`:
   - `api.js`: lớp trung gian `window.QD` gọi API bằng `fetch`, chuẩn hóa URL và xử lý JSON/lỗi mạng.
   - `auth.js`: kiểm tra form, gọi đăng ký/đăng nhập/đăng xuất qua `window.QD`, cập nhật thanh điều hướng (`navLogin`, `navRegister`, `navUser`, `navLogout`).
